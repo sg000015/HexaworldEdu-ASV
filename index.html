@@ -10,10 +10,23 @@
 
 <body style="text-align: center; padding: 0; border: 0; margin: 0;">
 
+  <!-- 로딩 화면 -->
+  <div id="loading-screen">
+    <div class="spinner"></div>
+
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+  </div>
+
   <div id="unity-container"><canvas id="unity-canvas"></canvas></div>
 
   <script src="Build/RegisterStudent.loader.js"></script>
   <script>
+    const loadingScreen = document.getElementById("loading-screen");
+    const progressBar = document.getElementById("progress-bar");
+    const progressText = document.getElementById("progress-text");
+
     createUnityInstance(document.querySelector("#unity-canvas"), {
       arguments: [],
       dataUrl: "Build/RegisterStudent.data",
@@ -25,6 +38,14 @@
       productVersion: "0.1.0",
       // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
       // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+    }, (progress) => {
+      // 진행률에 따라 막대 채우기 (0~1)
+      const percent = Math.round(progress * 100);
+      progressBar.style.width = percent + "%";
+    }).then(() => {
+      // 로드 완료 시 페이드아웃
+      loadingScreen.style.opacity = "0";
+      setTimeout(() => loadingScreen.remove(), 500);
     });
   </script>
 </body>
